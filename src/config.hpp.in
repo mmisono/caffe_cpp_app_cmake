@@ -1,0 +1,5 @@
+#pragma once
+
+#cmakedefine CPU_ONLY
+
+
