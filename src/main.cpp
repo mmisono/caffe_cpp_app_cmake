@@ -6,9 +6,9 @@
 int main(int argc, char* argv[]){
     auto mode = caffe::Caffe::CPU;
 #ifndef CPU_ONLY
-   if(argc >= 2){
-       caffe::Caffe::set_mode(caffe::Caffe::GPU);
-   }
+    if(argc >= 2){
+        mode = caffe::Caffe::GPU;
+    }
 #endif
     caffe::Caffe::set_mode(mode);
 

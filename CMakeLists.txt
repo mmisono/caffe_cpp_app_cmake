@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.2)
 
-project (test_project CXX)
+project (test_project C CXX)
 
 # compiler flags
 set(CMAKE_CXX_STANDARD 14)
@@ -31,8 +31,9 @@ set (Caffe_LIBS
     "${CMAKE_CURRENT_SOURCE_DIR}/caffe/build/lib/libcaffe.a")
 
 # caffe's dependent libraries
-include(ExternalProject)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+include(ExternalProject)
+include (cmake/Utils.cmake)
 include (cmake/Dependencies.cmake)
 
 # include files
