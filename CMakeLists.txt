@@ -13,6 +13,7 @@ option(CPU_ONLY "Build program without GPU support" OFF)
 option(USE_OPENCV "Build with OpenCV support" ON)
 option(USE_LEVELDB "Build with levelDB" OFF)
 option(USE_LMDB "Build with lmdb" OFF)
+option(BUILD_python "Build with python" OFF)
 
 # Path used for searching by FIND_XXX()
 set(CMAKE_PREFIX_PATH "/usr/local/opt/opencv3/")
@@ -27,8 +28,15 @@ list (APPEND Caffe_INCLUDE_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/caffe/include/")
 list (APPEND Caffe_INCLUDE_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/caffe/build/src/")
-set (Caffe_LIBS
-    "${CMAKE_CURRENT_SOURCE_DIR}/caffe/build/lib/libcaffe.a")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
+        OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  set(Caffe_LIBS
+      "-Wl,-force_load ${CMAKE_CURRENT_SOURCE_DIR}/caffe/build/lib/libcaffe.a")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set(Caffe_LIBS "-Wl,--whole-archive
+      ${CMAKE_CURRENT_SOURCE_DIR}/caffe/build/lib/libcaffe.a
+      -Wl,--no-whole-archive")
+endif()
 
 # caffe's dependent libraries
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
@@ -53,3 +61,4 @@ message(STATUS "USE_LMDB=${USE_LMDB}")
 message(STATUS "BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 message(STATUS "Caffe_LIBS=${Caffe_LIBS}")
 message(STATUS "Caffe_LINKER_LIBS=${Caffe_LINKER_LIBS}")
+message(STATUS "CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
